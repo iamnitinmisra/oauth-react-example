@@ -34,6 +34,9 @@ http://localhost:3000
 - select users from the side panel
 - you should see an application called FushionAuth. register your username to your new application
 
-
+## clone the repo
 - clone the repository
 - run npm install in root
+- update setup.js with information from your FushionAuth app
+- run nodemon
+- run npm start
