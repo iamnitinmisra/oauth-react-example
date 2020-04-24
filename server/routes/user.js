@@ -3,18 +3,18 @@ const router = express.Router();
 const request = require("request");
 const config = require("../../src/setup");
 
-router.get('/', (req, res) => {
+router.get("/", (req, res) => {
   // token in session -> get user data and send it back to the react app
   if (req.session.token) {
     request(
       // POST request to /introspect endpoint
       {
-        method: 'POST',
-        uri: `http://localhost:${config.fusionAuthPort}/oauth2/introspect`,
+        method: "POST",
+        uri: `http://localhost:${config.fusionAuthPort}/oauth2/introspect`, //this URI is the API you want to hit
         form: {
-          'client_id': config.clientID,
-          'token': req.session.token
-        }
+          client_id: config.clientID,
+          token: req.session.token,
+        },
       },
 
       // callback
@@ -26,24 +26,22 @@ router.get('/', (req, res) => {
           request(
             // GET request to /registration endpoint
             {
-              method: 'GET',
+              method: "GET",
               uri: `http://localhost:${config.fusionAuthPort}/api/user/registration/${introspectResponse.sub}/${config.applicationID}`,
               json: true,
               headers: {
-                'Authorization': config.apiKey
-              }
+                Authorization: config.apiKey,
+              },
             },
 
             // callback
             (error, response, body) => {
-              res.send(
-                {
-                  token: {
-                    ...introspectResponse,
-                  },
-                  ...body
-                }
-              );
+              res.send({
+                token: {
+                  ...introspectResponse,
+                },
+                ...body,
+              });
             }
           );
         }
